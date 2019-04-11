@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: konga-proxy
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  ports:
+  - name: kong-proxy
+    port: 1337
+    targetPort: 1337
+    protocol: TCP
+  selector:
+    app: konga
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: konga
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: konga
+        app: konga
+    spec:
+      containers:
+      - name: konga
+        image: pantsel/konga
+        ports:
+        - containerPort: 1337

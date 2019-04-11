@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-proxy
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  ports:
+  - name: kong-proxy
+    port: 8002
+    targetPort: 8002
+    protocol: TCP
+  selector:
+    app: kong
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-proxy-ssl
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  ports:
+  - name: kong-proxy-ssl
+    port: 8445
+    targetPort: 8445
+    protocol: TCP
+  selector:
+    app: kong
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-admin
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  ports:
+  - name: kong-admin
+    port: 8003
+    targetPort: 8003
+    protocol: TCP
+  selector:
+    app: kong
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-admin-ssl
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  ports:
+  - name: kong-admin-ssl
+    port: 8446
+    targetPort: 8446
+    protocol: TCP
+  selector:
+    app: kong
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kong
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: kong
+        app: kong
+    spec:
+      containers:
+      - name: kong
+        image: kong
+        env:
+          - name: KONG_ADMIN_LISTEN
+            value: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+          - name: KONG_PG_PASSWORD
+            value: kong
+          - name: KONG_PG_HOST
+            value: postgres
+          - name: KONG_PROXY_ACCESS_LOG
+            value: "/dev/stdout"
+          - name: KONG_ADMIN_ACCESS_LOG
+            value: "/dev/stdout"
+          - name: KONG_PROXY_ERROR_LOG
+            value: "/dev/stderr"
+          - name: KONG_ADMIN_ERROR_LOG
+            value: "/dev/stderr"
+        ports:
+        - name: proxy
+          containerPort: 8003
+          protocol: TCP
+        - name: admin
+          containerPort: 8004
+          protocol: TCP
+        - name: proxy-ssl
+          containerPort: 8445
+          protocol: TCP
+        - name: admin-ssl
+          containerPort: 8446
+          protocol: TCP

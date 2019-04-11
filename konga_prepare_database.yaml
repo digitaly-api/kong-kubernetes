@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: konga-prepare
+spec:
+  template:
+    metadata:
+      name: kong-prepare
+    spec:
+      containers:
+      - name: kong-prepare
+        image: pantsel/konga
+        command: [ "/bin/sh", "-c", "-c prepare -a postgres -u postgresql://kong-admin@postgres:5432/konga_db" ]
+      restartPolicy: Never
