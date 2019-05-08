@@ -25,8 +25,6 @@ items:
             containerPort: 8003
             protocol: TCP
           env:
-          - name: KONG_PROXY_LISTEN
-            value: "0.0.0.0:8002, 0.0.0.0:8446 ssl"
           - name: KONG_ADMIN_LISTEN
             value: "0.0.0.0:8003, 0.0.0.0:8446 ssl"
           - name: KONG_PG_PASSWORD
