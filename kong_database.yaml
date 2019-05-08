@@ -1,7 +1,16 @@
+kind: ss-database-kong
+apiVersion: v1
+metadata:
+  name: test
+  labels:
+    name: test
+
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres
+  namespace: ss-database-kong
 spec:
   ports:
   - name: pgql
@@ -16,6 +25,7 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   name: postgres
+  namespace: ss-database-kong
 spec:
   replicas: 1
   template:
