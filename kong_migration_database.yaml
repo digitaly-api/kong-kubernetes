@@ -1,9 +1,9 @@
-kind: ss-database-kong
+kind: Namespace
 apiVersion: v1
 metadata:
-  name: test
+  name: ss-database-kong
   labels:
-    name: test
+    name: ss-database-kong
 
 ---
 apiVersion: batch/v1
