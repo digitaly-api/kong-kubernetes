@@ -48,7 +48,7 @@ spec:
 
 ---
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: ReplicationController
 metadata:
   name: kong
   namespace: ss-gateway-kong
@@ -65,7 +65,7 @@ spec:
         image: kong
         env:
           - name: KONG_PROXY_LISTEN
-            value: "0.0.0.0:8002, 0.0.0.0:8446 ssl"
+            value: "0.0.0.0:8002, 0.0.0.0:8445 ssl"
           - name: KONG_ADMIN_LISTEN
             value: "0.0.0.0:8003, 0.0.0.0:8446 ssl"
           - name: KONG_PG_PASSWORD

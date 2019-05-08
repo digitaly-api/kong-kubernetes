@@ -1,0 +1,177 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ss-redis
+spec:
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app: ss-redis
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: ss-redis
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ss-redis
+    spec:
+      containers:
+        - name: ss-redis-auth
+          image: redis:5-alpine
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - mountPath: /var/lib/redis/data
+              name: redis-data
+      volumes:
+        - name: redis-data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+    - 0.0.0.0/0
+  ports:
+    - name: auth
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: ss-auth
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ss-auth
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ss-auth
+        app: ss-auth
+    spec:
+      containers:
+        - name: ss-auth
+          image: localhost:5000/ss-auth:v1
+          env:
+            - name: CACHE_DRIVER
+              value: redis
+            - name: REDIS_HOST
+              value: ss-redis
+            - name: APP_ENV
+              value: homolog
+            - name: SWOOLE_HOT_RELOAD_ENABLE
+              value: 'false'
+            - name: APP_KEY
+              value: 'def000001a8ae634f9755bbd662faa8f89dd31a4ea1f5844c123fbfc02bef29c24358174dc6b62db43b16b915115d97f7fa0a5c782d7476dea7fdd790d9f350ce22d771a'
+          ports:
+            - containerPort: 8080
+
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  annotations:
+#    kompose.cmd: kompose convert
+#    kompose.version: 1.18.0 ()
+#  creationTimestamp: null
+#  labels:
+#    io.kompose.service: redis-auth
+#  name: redis-auth
+#spec:
+#  replicas: 1
+#  strategy: {}
+#  template:
+#    metadata:
+#      creationTimestamp: null
+#      labels:
+#        io.kompose.service: redis-auth
+#    spec:
+#      containers:
+#        - image: redis:5-alpine
+#          name: ss-redis-auth
+#          resources: {}
+#      restartPolicy: Always
+#status: {}
+#
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  annotations:
+#    kompose.cmd: kompose convert
+#    kompose.version: 1.18.0 ()
+#  creationTimestamp: null
+#  labels:
+#    io.kompose.service: auth
+#  name: auth
+#spec:
+#  type: LoadBalancer
+#  loadBalancerSourceRanges:
+#  - 0.0.0.0/0
+#  ports:
+#    - name: "8080"
+#      port: 8080
+#      targetPort: 8080
+#      protocol: TCP
+#  selector:
+#    io.kompose.service: auth
+#status:
+#  loadBalancer: {}
+#
+#
+#---
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  annotations:
+#    kompose.cmd: kompose convert
+#    kompose.version: 1.18.0 ()
+#  creationTimestamp: null
+#  labels:
+#    io.kompose.service: auth
+#  name: auth
+#spec:
+#  replicas: 1
+#  strategy: {}
+#  template:
+#    metadata:
+#      creationTimestamp: null
+#      labels:
+#        io.kompose.service: auth
+#    spec:
+#      containers:
+#        - env:
+#            - name: CACHE_DRIVER
+#              value: redis
+#            - name: REDIS_HOST
+#              value: redis-auth
+#            - name: APP_ENV
+#              value: homolog
+#            - name: SWOOLE_HOT_RELOAD_ENABLE
+#              value: 'false'
+#            - name: APP_KEY
+#              value: 'def000001a8ae634f9755bbd662faa8f89dd31a4ea1f5844c123fbfc02bef29c24358174dc6b62db43b16b915115d97f7fa0a5c782d7476dea7fdd790d9f350ce22d771a'
+#          image: localhost:5000/ss-auth:v1
+#          name: ss-auth
+#          ports:
+#            - containerPort: 8080
+#          resources: {}
+#      hostname: auth
+#      restartPolicy: Always
+#status: {}

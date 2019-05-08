@@ -1,0 +1,147 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: users
+spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+    - 0.0.0.0/0
+  ports:
+    - name: users
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: ss-users
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ss-users
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ss-users
+        app: ss-users
+    spec:
+      containers:
+        - name: ss-users
+          image: localhost:5000/ss-users:v1
+          env:
+            - name: APP_ENV
+              value: homolog
+            - name: SWOOLE_HOT_RELOAD_ENABLE
+              value: 'false'
+            - name: OAUTH_PUBLIC_KEY
+              value: '/app/.keys/oauth_key.pub'
+          ports:
+            - containerPort: 8080
+
+
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  annotations:
+#    kompose.cmd: kompose convert
+#    kompose.version: 1.18.0 ()
+#  creationTimestamp: null
+#  labels:
+#    io.kompose.service: users
+#  name: users
+#spec:
+#  replicas: 1
+#  strategy:
+#    type: Recreate
+#  template:
+#    metadata:
+#      creationTimestamp: null
+#      labels:
+#        io.kompose.service: users
+#    spec:
+#      containers:
+#        - image: localhost:5000/docker_users:latest
+#          name: ss-users
+#          resources: {}
+#          volumeMounts:
+#            - mountPath: /app
+#              name: users-claim
+#      restartPolicy: Always
+#      volumes:
+#        - name: users-claim
+#          persistentVolumeClaim:
+#            claimName: users-claim
+#status: {}
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: users
+#spec:
+#  type: LoadBalancer
+#  loadBalancerSourceRanges:
+#    - 0.0.0.0/0
+#  ports:
+#    - name: kong-proxy
+#      port: 8080
+#      targetPort: 8080
+#      protocol: TCP
+#  selector:
+#    app: users
+#
+#---
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  annotations:
+#    kompose.cmd: kompose convert
+#    kompose.version: 1.18.0 ()
+#  creationTimestamp: null
+#  labels:
+#    io.kompose.service: users
+#  name: users
+#spec:
+#  replicas: 1
+#  strategy:
+#    type: Recreate
+#  template:
+#    metadata:
+#      creationTimestamp: null
+#      labels:
+#        io.kompose.service: users
+#    spec:
+#      containers:
+#        - image: localhost:5000/docker_users:latest
+#          name: ss-users
+#          ports:
+#            - containerPort: 8080
+#          resources: {}
+#          volumeMounts:
+#            - mountPath: /app
+#              name: users-claim
+#      restartPolicy: Always
+#      volumes:
+#        - name: users-claim
+#          persistentVolumeClaim:
+#            claimName: users-claim
+#status: {}
+#apiVersion: extensions/v1beta1
+#kind: Deployment
+#metadata:
+#  name: users
+#spec:
+#  replicas: 1
+#  template:
+#    metadata:
+#      labels:
+#        name: users
+#        app: users
+#    spec:
+#      containers:
+#        - name: ss-users
+#          image: localhost:5000/docker_users:latest
+#          ports:
+#            - containerPort: 8080

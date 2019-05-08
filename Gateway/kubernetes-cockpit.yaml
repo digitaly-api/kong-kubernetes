@@ -9,7 +9,7 @@ items:
     labels:
       name: kubernetes-cockpit
   spec:
-    replicas: 1
+    replicas: 3
     selector:
       name: kubernetes-cockpit
     template:
