@@ -61,7 +61,7 @@ spec:
 
 ---
 apiVersion: extensions/v1beta1
-kind: ReplicationController
+kind: Deployment
 metadata:
   name: kong
 spec:
