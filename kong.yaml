@@ -24,15 +24,6 @@ items:
           - name: proxy
             containerPort: 8003
             protocol: TCP
-          - name: admin
-            containerPort: 8004
-            protocol: TCP
-          - name: proxy-ssl
-            containerPort: 8445
-            protocol: TCP
-          - name: admin-ssl
-            containerPort: 8446
-            protocol: TCP
           env:
           - name: KONG_PROXY_LISTEN
             value: "0.0.0.0:8002, 0.0.0.0:8446 ssl"
@@ -53,34 +44,6 @@ items:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: kong-proxy
-    labels:
-      name: kong-proxy
-  spec:
-    type: LoadBalancer
-    ports:
-    - protocol: TCP
-      port: 8002
-      targetPort: 8002
-    selector:
-      name: kong
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: kong-proxy-ssl
-    labels:
-      name: kong-proxy
-  spec:
-    type: LoadBalancer
-    ports:
-    - protocol: TCP
-      port: 8445
-      targetPort: 8445
-    selector:
-      name: kong
-- kind: Service
-  apiVersion: v1
-  metadata:
     name: kong-admin
     labels:
       name: kong-admin
@@ -90,19 +53,5 @@ items:
     - protocol: TCP
       port: 8003
       targetPort: 8003
-    selector:
-      name: kong
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: kong-admin-ssl
-    labels:
-      name: kong-admin
-  spec:
-    type: LoadBalancer
-    ports:
-    - protocol: TCP
-      port: 8446
-      targetPort: 8446
     selector:
       name: kong
