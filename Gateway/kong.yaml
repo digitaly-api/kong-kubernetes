@@ -93,3 +93,4 @@ spec:
         - name: kong-admin-ssl
           containerPort: 8446
           protocol: TCP
+          
