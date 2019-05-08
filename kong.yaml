@@ -37,6 +37,9 @@ kind: Service
 metadata:
   name: kong-admin
 spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
   ports:
   - name: kong-admin
     port: 8003
@@ -51,6 +54,9 @@ kind: Service
 metadata:
   name: kong-admin-ssl
 spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
   ports:
   - name: kong-admin-ssl
     port: 8446
@@ -96,12 +102,6 @@ spec:
         - name: proxy
           containerPort: 8003
           protocol: TCP
-        - name: admin
-          containerPort: 8004
-          protocol: TCP
         - name: proxy-ssl
           containerPort: 8445
-          protocol: TCP
-        - name: admin-ssl
-          containerPort: 8446
           protocol: TCP
