@@ -1,11 +1,3 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: ss-database-kong
-  labels:
-    name: ss-database-kong
-
----
 apiVersion: batch/v1
 kind: Job
 metadata:
