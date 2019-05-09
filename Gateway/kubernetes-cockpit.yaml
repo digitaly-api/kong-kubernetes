@@ -1,3 +1,10 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ss-kubernetes-cockpit
+  labels:
+    name: ss-kubernetes-cockpit
+
 ---
 kind: List
 apiVersion: v1
@@ -6,6 +13,7 @@ items:
   apiVersion: v1
   metadata:
     name: kubernetes-cockpit
+    namespace: ss-kubernetes-cockpit
     labels:
       name: kubernetes-cockpit
   spec:
@@ -30,6 +38,7 @@ items:
   apiVersion: v1
   metadata:
     name: kubernetes-cockpit
+    namespace: ss-kubernetes-cockpit
     labels:
       name: kubernetes-cockpit
   spec:
