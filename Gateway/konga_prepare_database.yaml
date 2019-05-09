@@ -6,18 +6,36 @@ metadata:
     name: ss-gateway-konga-ui
 
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: v1
+kind: Pod
 metadata:
+  labels:
+    io.kompose.service: konga-prepare
   name: konga-prepare
-  namespace: ss-gateway-konga-ui
 spec:
-  template:
-    metadata:
-      name: kong-prepare
-    spec:
-      containers:
-      - name: kong-prepare
-        image: pantsel/konga
-        command: [ "/bin/sh", "-c", "-c prepare -a postgres -u postgresql://kong-admin.ss-gateway-kong@postgres.ss-database-kong:5432/konga_db" ]
-      restartPolicy: Never
+  containers:
+  - args:
+    - -c
+    - prepare
+    - -a
+    - postgres
+    - -u
+    - postgresql://kong@postgres.ss-database-kong:5432/konga_db
+    image: pantsel/konga:next
+    name: konga-prepare
+  restartPolicy: OnFailure
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: konga-prepare
+#   namespace: ss-gateway-konga-ui
+# spec:
+#   template:
+#     metadata:
+#       name: kong-prepare
+#     spec:
+#       containers:
+#       - name: kong-prepare
+#         image: pantsel/konga
+#         command: [ "/bin/sh", "-c", "-c prepare -a postgres -u postgresql://kong@postgres.ss-database-kong:5432/konga_db" ]
+#       restartPolicy: Never
