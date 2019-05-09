@@ -22,4 +22,4 @@ spec:
     - postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db
     name: konga-prepare
     image: pantsel/konga
-  restartPolicy: OnFailure
+  restartPolicy: Never
