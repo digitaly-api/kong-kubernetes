@@ -24,6 +24,8 @@ spec:
           - prepare
           - -a
           - postgres
+          - W
+          - kong
           - -u
           - postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db
       restartPolicy: Never
