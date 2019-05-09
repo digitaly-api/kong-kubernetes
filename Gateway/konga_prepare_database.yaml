@@ -21,7 +21,7 @@ spec:
     - -a
     - postgres
     - -u
-    - postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db
+    - postgresql://kong@postgres:5432/konga_db
     name: konga-prepare
     image: pantsel/konga
   restartPolicy: OnFailure
