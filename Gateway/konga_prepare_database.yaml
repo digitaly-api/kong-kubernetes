@@ -19,5 +19,11 @@ spec:
       containers:
       - name: konga-prepare
         image: pantsel/konga
-        command: [ "/bin/sh", "-c", "prepare -a postgres -u postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db" ]
+        args:
+          - -c
+          - prepare
+          - -a
+          - postgres
+          - -u
+          - postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db
       restartPolicy: Never
