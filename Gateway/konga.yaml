@@ -1,11 +1,3 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: ss-gateway-konga-ui
-  labels:
-    name: ss-gateway-konga-ui
-
----
 apiVersion: v1
 kind: Service
 metadata:
