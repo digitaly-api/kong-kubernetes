@@ -12,8 +12,12 @@ metadata:
   name: konga-prepare
   namespace: ss-gateway-konga-ui
 spec:
-  containers:
-  - name: konga-prepare
-    image: pantsel/konga
-    command: [ "/bin/sh", "-c", "prepare -a postgres -u postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db" ]
-  restartPolicy: Neve
+  template:
+    metadata:
+      name: konga-prepare
+    spec:
+      containers:
+      - name: konga-prepare
+        image: pantsel/konga
+        command: [ "/bin/sh", "-c", "prepare -a postgres -u postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db" ]
+      restartPolicy: Never
