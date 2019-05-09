@@ -17,8 +17,8 @@ spec:
   - 0.0.0.0/0
   ports:
   - name: kong-proxy
-    port: 8002
-    targetPort: 8002
+    port: 8005
+    targetPort: 8005
     protocol: TCP
   - name: kong-proxy-ssl
     port: 8445
@@ -36,8 +36,8 @@ metadata:
 spec:
   ports:
   - name: kong-admin
-    port: 8003
-    targetPort: 8003
+    port: 8006
+    targetPort: 8006
     protocol: TCP
   - name: kong-admin-ssl
     port: 8446
@@ -65,9 +65,9 @@ spec:
         image: kong
         env:
           - name: KONG_PROXY_LISTEN
-            value: "0.0.0.0:8002, 0.0.0.0:8445 ssl"
+            value: "0.0.0.0:8005, 0.0.0.0:8445 ssl"
           - name: KONG_ADMIN_LISTEN
-            value: "0.0.0.0:8003, 0.0.0.0:8446 ssl"
+            value: "0.0.0.0:8006, 0.0.0.0:8446 ssl"
           - name: KONG_PG_PASSWORD
             value: kong
           - name: KONG_PG_HOST
@@ -81,16 +81,15 @@ spec:
           - name: KONG_ADMIN_ERROR_LOG
             value: "/dev/stderr"
         ports:
-        - name: kong-proxy
-          containerPort: 8003
-          protocol: TCP
-        - name: kong-admin
-          containerPort: 8004
-          protocol: TCP
-        - name: kong-proxy-ssl
-          containerPort: 8445
-          protocol: TCP
-        - name: kong-admin-ssl
-          containerPort: 8446
-          protocol: TCP
-          
+          - name: kong-proxy
+            containerPort: 8005
+            protocol: TCP
+          - name: kong-admin
+            containerPort: 8006
+            protocol: TCP
+          - name: kong-proxy-ssl
+            containerPort: 8445
+            protocol: TCP
+          - name: kong-admin-ssl
+            containerPort: 8446
+            protocol: TCP

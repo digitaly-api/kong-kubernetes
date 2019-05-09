@@ -8,9 +8,13 @@ spec:
   loadBalancerSourceRanges:
   - 0.0.0.0/0
   ports:
-  - name: kong-proxy
-    port: 1337
-    targetPort: 1337
+  - name: konga-proxy
+    port: 8004
+    targetPort: 8004
+    protocol: TCP
+  - name: konga-proxy-ssl
+    port: 8444
+    targetPort: 8444
     protocol: TCP
   selector:
     app: konga
@@ -32,5 +36,21 @@ spec:
       containers:
       - name: konga
         image: pantsel/konga
+        env:
+          - name: DB_ADAPTER
+            value: postgres
+          - name: DB_HOST
+            value: postgres.ss-database-kong
+          - name: DB_USER
+            value: kong
+          - name: DB_DATABASE
+            value: konga_db
+          - name: NODE_ENV
+            value: production
         ports:
-        - containerPort: 1337
+          - name: konga-proxy
+            containerPort: 8004
+            protocol: TCP
+          - name: konga-proxy-ssl
+            containerPort: 8444
+            protocol: TCP
