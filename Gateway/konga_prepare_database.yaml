@@ -9,8 +9,6 @@ metadata:
 apiVersion: v1
 kind: Pod
 metadata:
-  labels:
-    io.kompose.service: konga-prepare
   name: konga-prepare
   namespace: ss-gateway-konga-ui
 spec:
