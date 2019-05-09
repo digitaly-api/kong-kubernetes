@@ -22,7 +22,7 @@ spec:
     - postgres
     - -u
     - postgresql://kong@postgres.ss-database-kong:5432/konga_db
-    - -p
+    - --password
     - kong
     name: konga-prepare
     image: pantsel/konga
