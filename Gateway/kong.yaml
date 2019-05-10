@@ -17,8 +17,8 @@ spec:
   - 0.0.0.0/0
   ports:
   - name: kong-proxy
-    port: 8005
-    targetPort: 8005
+    port: 8002
+    targetPort: 8002
     protocol: TCP
   - name: kong-proxy-ssl
     port: 8445
@@ -34,13 +34,10 @@ metadata:
   name: kong-admin
   namespace: ss-gateway-kong
 spec:
-  type: LoadBalancer
-  loadBalancerSourceRanges:
-  - 0.0.0.0/0
   ports:
   - name: kong-admin
-    port: 8006
-    targetPort: 8006
+    port: 8003
+    targetPort: 8003
     protocol: TCP
   - name: kong-admin-ssl
     port: 8446
@@ -50,7 +47,7 @@ spec:
     app: kong
 
 ---
-apiVersion: v1
+apiVersion: extensions/v1beta1
 kind: ReplicationController
 metadata:
   name: kong
@@ -67,18 +64,14 @@ spec:
       - name: kong
         image: kong
         env:
+          - name: KONG_PROXY_LISTEN
+            value: "0.0.0.0:8002, 0.0.0.0:8445 ssl"
           - name: KONG_ADMIN_LISTEN
-            value: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
-          - name: KONG_DATABASE
-            value: cassandra
-          - name: KONG_CASSANDRA_CONTACT_POINTS
-            value: cassandra.ss-gateway-database-casandra
-          - name: KONG_CASSANDRA_KEYSPACE
+            value: "0.0.0.0:8003, 0.0.0.0:8446 ssl"
+          - name: KONG_PG_PASSWORD
             value: kong
-          - name: KONG_CASSANDRA_REPL_FACTOR
-            value: "2"
-          - name: KONG_DB_UPDATE_PROPAGATION
-            value: "2"
+          - name: KONG_PG_HOST
+            value: postgres-kong.ss-gateway-database
           - name: KONG_PROXY_ACCESS_LOG
             value: "/dev/stdout"
           - name: KONG_ADMIN_ACCESS_LOG
@@ -88,15 +81,15 @@ spec:
           - name: KONG_ADMIN_ERROR_LOG
             value: "/dev/stderr"
         ports:
-          - name: kong-proxy
-            containerPort: 8005
-            protocol: TCP
-          - name: kong-admin
-            containerPort: 8006
-            protocol: TCP
-          - name: kong-proxy-ssl
-            containerPort: 8445
-            protocol: TCP
-          - name: kong-admin-ssl
-            containerPort: 8446
-            protocol: TCP
+        - name: kong-proxy
+          containerPort: 8003
+          protocol: TCP
+        - name: kong-admin
+          containerPort: 8004
+          protocol: TCP
+        - name: kong-proxy-ssl
+          containerPort: 8445
+          protocol: TCP
+        - name: kong-admin-ssl
+          containerPort: 8446
+          protocol: TCP

@@ -1,16 +1,16 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: ss-gateway-database-postgres
+  name: ss-gateway-database-konga
   labels:
-    name: ss-gateway-database-postgres
+    name: ss-gateway-database-konga
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres
-  namespace: ss-gateway-database-postgres
+  name: postgres-konga
+  namespace: ss-gateway-database-konga
 spec:
   ports:
   - name: pgql
@@ -18,20 +18,20 @@ spec:
     targetPort: 5432
     protocol: TCP
   selector:
-    app: postgres
+    app: postgres-konga
 
 ---
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: postgres
-  namespace: ss-gateway-database-postgres
+  name: postgres-konga
+  namespace: ss-gateway-database-konga
 spec:
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-konga
     spec:
       containers:
         - name: postgres
