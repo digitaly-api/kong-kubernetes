@@ -34,7 +34,7 @@ spec:
         app: postgres-konga
     spec:
       containers:
-        - name: postgres
+        - name: postgres-konga
           image: postgres:9.6
           env:
             - name: POSTGRES_USER

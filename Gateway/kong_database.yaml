@@ -34,7 +34,7 @@ spec:
         app: postgres-kong
     spec:
       containers:
-        - name: postgres
+        - name: postgres-kong
           image: postgres:9.6
           env:
             - name: POSTGRES_USER
