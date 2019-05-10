@@ -1,8 +1,16 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ss-gateway-konga
+  labels:
+    name: ss-gateway-konga
+
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: konga-proxy
-  namespace: ss-gateway-konga-ui
+  namespace: ss-gateway-konga
 spec:
   type: LoadBalancer
   loadBalancerSourceRanges:
@@ -24,7 +32,7 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   name: konga
-  namespace: ss-gateway-konga-ui
+  namespace: ss-gateway-konga
 spec:
   replicas: 3
   template:
@@ -40,13 +48,13 @@ spec:
           - name: DB_ADAPTER
             value: postgres
           - name: DB_HOST
-            value: postgres.ss-database-kong.svc.cluster.local
+            value: postgres.ss-gateway-database-konga.svc.cluster.local
           - name: DB_USER
-            value: kong
+            value: konga
           - name: DB_PASSWORD
-            value: kong
+            value: konga
           - name: DB_DATABASE
-            value: konga_db
+            value: konga
           - name: NODE_ENV
             value: production
         ports:

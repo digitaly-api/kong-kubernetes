@@ -34,6 +34,9 @@ metadata:
   name: kong-admin
   namespace: ss-gateway-kong
 spec:
+  type: LoadBalancer
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
   ports:
   - name: kong-admin
     port: 8006
@@ -64,14 +67,18 @@ spec:
       - name: kong
         image: kong
         env:
-          - name: KONG_PROXY_LISTEN
-            value: "0.0.0.0:8005, 0.0.0.0:8445 ssl"
           - name: KONG_ADMIN_LISTEN
-            value: "0.0.0.0:8006, 0.0.0.0:8446 ssl"
-          - name: KONG_PG_PASSWORD
+            value: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+          - name: KONG_DATABASE
+            value: cassandra
+          - name: KONG_CASSANDRA_CONTACT_POINTS
+            value: cassandra.ss-gateway-database-casandra
+          - name: KONG_CASSANDRA_KEYSPACE
             value: kong
-          - name: KONG_PG_HOST
-            value: postgres.ss-database-kong
+          - name: KONG_CASSANDRA_REPL_FACTOR
+            value: "2"
+          - name: KONG_DB_UPDATE_PROPAGATION
+            value: "2"
           - name: KONG_PROXY_ACCESS_LOG
             value: "/dev/stdout"
           - name: KONG_ADMIN_ACCESS_LOG

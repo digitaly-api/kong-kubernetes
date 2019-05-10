@@ -1,29 +1,55 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: ss-gateway-konga-ui
+  name: ss-gateway-database-konga
   labels:
-    name: ss-gateway-konga-ui
+    name: ss-gateway-database-konga
 
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: v1
+kind: Service
 metadata:
-  name: konga-prepare
-  namespace: ss-gateway-konga-ui
+  name: postgres
+  namespace: ss-gateway-database-konga
 spec:
+  ports:
+  - name: pgql
+    port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: postgres
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: postgres
+  namespace: ss-gateway-database-konga
+spec:
+  replicas: 1
   template:
     metadata:
-      name: konga-prepare
+      labels:
+        app: postgres
     spec:
       containers:
-      - name: konga-prepare
-        image: pantsel/konga
-        args:
-          - -c
-          - prepare
-          - -a
-          - postgres
-          - -u
-          - postgresql://kong@postgres.ss-database-kong.svc.cluster.local:5432/konga_db
-      restartPolicy: Never
+        - name: postgres
+          image: postgres:9.6
+          env:
+            - name: POSTGRES_USER
+              value: konga
+            - name: POSTGRES_PASSWORD
+              value: konga
+            - name: POSTGRES_DB
+              value: konga
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-data
+      volumes:
+        - name: pg-data
+          emptyDir: {}

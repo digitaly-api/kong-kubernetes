@@ -1,8 +1,16 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ss-gateway-migration-database-casandra
+  labels:
+    name: ss-gateway-migration-database-casandra
+
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: kong-migration
-  namespace: ss-database-kong
+  namespace: ss-gateway-migration-database-casandra
 spec:
   template:
     metadata:
@@ -14,9 +22,11 @@ spec:
         env:
           - name: KONG_NGINX_DAEMON
             value: 'off'
-          - name: KONG_PG_PASSWORD
+          - name: KONG_DATABASE
+            value: cassandra
+          - name: KONG_CASSANDRA_CONTACT_POINTS
+            value: cassandra.ss-gateway-database-casandra
+          - name: KONG_CASSANDRA_KEYSPACE
             value: kong
-          - name: KONG_PG_HOST
-            value: postgres.ss-database-kong.svc.cluster.local
         command: [ "/bin/sh", "-c", "kong migrations bootstrap" ]
       restartPolicy: Never
