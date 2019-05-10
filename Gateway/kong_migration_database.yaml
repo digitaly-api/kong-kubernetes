@@ -1,16 +1,8 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: ss-gateway-migration-database-casandra
-  labels:
-    name: ss-gateway-migration-database-casandra
-
----
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: kong-migration
-  namespace: ss-gateway-migration-database-casandra
+  namespace: ss-gateway-database-casandra
 spec:
   template:
     metadata:

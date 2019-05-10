@@ -48,7 +48,7 @@ spec:
           - name: DB_ADAPTER
             value: postgres
           - name: DB_HOST
-            value: postgres.ss-gateway-database-konga.svc.cluster.local
+            value: postgres.ss-gateway-database-postgres.svc.cluster.local
           - name: DB_USER
             value: konga
           - name: DB_PASSWORD
