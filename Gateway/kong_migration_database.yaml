@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: kong-migration
-  namespace: ss-gateway-database
+  namespace: ss-gateway-database-kong
 spec:
   template:
     metadata:

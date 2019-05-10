@@ -47,7 +47,7 @@ spec:
     app: kong
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: v1
 kind: ReplicationController
 metadata:
   name: kong
@@ -71,7 +71,7 @@ spec:
           - name: KONG_PG_PASSWORD
             value: kong
           - name: KONG_PG_HOST
-            value: postgres-kong.ss-gateway-database
+            value: postgres-kong.ss-gateway-database-kong
           - name: KONG_PROXY_ACCESS_LOG
             value: "/dev/stdout"
           - name: KONG_ADMIN_ACCESS_LOG
